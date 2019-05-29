@@ -57,6 +57,25 @@ server.get('/api/posts/:id/comments', (req, res) => {
 
 })
 
+server.delete('/api/posts/:id', (req, res) => {
+    const {id} = req.params;
+    db.remove(id)
+    .then(deleted => {
+        if (deleted) {
+            res.status(204).end();
+        } else {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "The user could not be removed" 
+        })
+    })
+})
+
 
 
 
