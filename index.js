@@ -36,6 +36,28 @@ server.get('/api/posts/:id', (req, res) => {
     })
 
 })
+//come back to this one
+server.get('/api/posts/:id/comments', (req, res) => {
+    const {id} = req.params;
+    db.findCommentById(id)
+    .then(comments => {
+        if (comments) {
+            res.status(200).json(comments);
+        } else {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "The comment information could not be retrieved."
+        })
+    })
+
+})
+
+
 
 
 
