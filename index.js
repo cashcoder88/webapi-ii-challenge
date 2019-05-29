@@ -96,33 +96,76 @@ server.post('/api/posts', (req, res) => {
     })}
 });
 
-server.post('/api/posts/:id/comments', (req, res) => {
-    const {id} = req.params;
-    const {text} = req.body;
-    const commentInfo = req.body.id;
-    if (!text) {
-        res.status(400).json({
-            errorMessage: "Please provide text for the comment."
-        })
-    } else {
-        db.insertComment(commentInfo)
-        .then(comment => {
-            if (comment) {
-                res.status(201).json(comment)
+// server.post('/api/posts/:id/comments', (req, res) => {
+//     const {id} = req.params;
+//     console.log('id', id);
+//     const {text} = req.body;
+//     console.log('text', text);
+//     const commentInfo = req.body;
+//     console.log('commentInfo', commentInfo);
+//     let posts = db.findById(req.params.id)
+//     // res.sendStatus(200);
+//     if (posts.length > 0) {
+
+//     }
+//     if (!text) {
+//         res.status(400).json({
+//             errorMessage: "Please provide text for the comment."
+//         })
+//     } else {
+//         db.insertComment(commentInfo)
+//         .then(comment => {
+//             if (comment) {
+//                 res.status(201).json(comment)
+//             } else {
+//                 res.status(404).json({
+//                     message: "The post with the specified ID does not exist."
+//                 })
+//             }
+//         })
+//         .catch(err => {
+//             res.status(500).json({
+//                 error: "There was an error while saving the comment to the database."
+//             })
+//         })
+//     }
+// });
+
+server.post('/api/posts/:id/comments', async (req, res) => {
+    const comment = req.body;
+    try {
+        let post = await db.findById(req.params.id)
+        if (post.length > 0) {
+            console.log('Comment', comment)
+            let results = await db.insertComment(comment) 
+            if (results && results.id) {
+                let newComment = await db.findCommentById(results.id)
+                res.status(201).json(newComment)
             } else {
-                res.status(404).json({
-                    message: "The post with the specified ID does not exist."
+                res.status(500).json({
+                    error: "There was an error while saving the comment to the database"
                 })
             }
-        })
-        .catch(err => {
-            res.status(500).json({
-                error: "There was an error while saving the comment to the database."
+            // console.log('RESULTS', results)
+            // res.sendStatus(200);
+        } else {
+            res.status(404).json({
+                message: "the post with specified ID was not found"
             })
+        }
+        
+    }
+    catch(err) {
+        console.error(err)
+        res.status(500).json({
+            error: 'something is going wrong, 500'
         })
     }
-});
+})
 
+server.put('/api/posts/:id', (req, res) => {
+    
+});
 
 
 
