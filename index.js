@@ -17,6 +17,29 @@ server.get('/api/posts', (req, res) => {
     });
 });
 
+server.get('/api/posts/:id', (req, res) => {
+    const {id} = req.params;
+    db.findById(id)
+    .then(post => {
+        if (post) {
+            res.status(200).json(post);
+        } else {
+            res.status(404).json({
+                message: "The user with the specified ID does not exist."
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "The user information could not be retrieved."
+        })
+    })
+
+})
+
+
+
+
 server.listen(6000, () => {
     console.log('Listening On Port 6000')
 })
