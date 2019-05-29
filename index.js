@@ -96,40 +96,6 @@ server.post('/api/posts', (req, res) => {
     })}
 });
 
-// server.post('/api/posts/:id/comments', (req, res) => {
-//     const {id} = req.params;
-//     console.log('id', id);
-//     const {text} = req.body;
-//     console.log('text', text);
-//     const commentInfo = req.body;
-//     console.log('commentInfo', commentInfo);
-//     let posts = db.findById(req.params.id)
-//     // res.sendStatus(200);
-//     if (posts.length > 0) {
-
-//     }
-//     if (!text) {
-//         res.status(400).json({
-//             errorMessage: "Please provide text for the comment."
-//         })
-//     } else {
-//         db.insertComment(commentInfo)
-//         .then(comment => {
-//             if (comment) {
-//                 res.status(201).json(comment)
-//             } else {
-//                 res.status(404).json({
-//                     message: "The post with the specified ID does not exist."
-//                 })
-//             }
-//         })
-//         .catch(err => {
-//             res.status(500).json({
-//                 error: "There was an error while saving the comment to the database."
-//             })
-//         })
-//     }
-// });
 
 server.post('/api/posts/:id/comments', async (req, res) => {
     const comment = req.body;
@@ -164,8 +130,32 @@ server.post('/api/posts/:id/comments', async (req, res) => {
 })
 
 server.put('/api/posts/:id', (req, res) => {
+    const changes = req.body;
+    const {title, contents} = req.body;
+    const {id} = req.params;
+    if (!title || !contents ) {
+        res.status(400).json({ 
+            errorMessage: "Please provide title and contents to update the post." 
+        })
+    }
+    else 
+    db.update(id, changes)
+    .then(updated => {
+        if (updated) {
+            res.status(200).json(updated)
+        } else {
+            res.status(404).json({
+                message: "The post with the specified ID does not exist."
+            })
+        }
+    })
+    .catch(err => {
+        res.status(500).json({
+            error: "The information could not be modified."
+        })
+    })
     
-});
+})
 
 
 
