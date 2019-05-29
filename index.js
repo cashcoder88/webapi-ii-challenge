@@ -38,11 +38,12 @@ server.get('/api/posts/:id', (req, res) => {
 })
 //come back to this one
 server.get('/api/posts/:id/comments', (req, res) => {
-    const {id} = req.params;
+    const id = req.params.id
     db.findCommentById(id)
-    .then(comments => {
-        if (comments) {
-            res.status(200).json(comments);
+    .then(comment => {
+        console.log(comment)
+        if (comment) {
+            res.status(200).json(comment);
         } else {
             res.status(404).json({
                 message: "The user with the specified ID does not exist."
@@ -95,25 +96,33 @@ server.post('/api/posts', (req, res) => {
     })}
 });
 
-server.post('/api/users', (req, res) => {
-    const {name, bio} = req.body;
-    const userInfo = req.body;
-    if (!name || !bio ) {
-        res.status(400).json({ 
-            errorMessage: "Please provide name and bio for the user." 
+server.post('/api/posts/:id/comments', (req, res) => {
+    const {id} = req.params;
+    const {text} = req.body;
+    const commentInfo = req.body.id;
+    if (!text) {
+        res.status(400).json({
+            errorMessage: "Please provide text for the comment."
+        })
+    } else {
+        db.insertComment(commentInfo)
+        .then(comment => {
+            if (comment) {
+                res.status(201).json(comment)
+            } else {
+                res.status(404).json({
+                    message: "The post with the specified ID does not exist."
+                })
+            }
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: "There was an error while saving the comment to the database."
+            })
         })
     }
-    else {
-    db.insert(userInfo)
-    .then(users => {
-            res.status(201).json(users)
-        })
-    .catch(err => {
-        res.status(500).json({
-             error: "There was an error while saving the user to the database" 
-        })
-    })}
-})
+});
+
 
 
 

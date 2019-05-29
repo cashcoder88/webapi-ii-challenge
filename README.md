@@ -74,8 +74,8 @@ Configure the API to handle to the following routes:
 
 | Method | Endpoint       | Description                                                                                                                                                                 |
 | ------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| [] POST   | /api/posts     | Creates a post using the information sent inside the `request body`. |
-| [] POST   | /api/posts/:id/comments | Creates a comment for the post with the specified id using information sent inside of the `request body`. |                                         
+| [x] POST   | /api/posts     | Creates a post using the information sent inside the `request body`. |
+| [xxx] POST   | /api/posts/:id/comments | Creates a comment for the post with the specified id using information sent inside of the `request body`. |                                         
 | [x] GET    | /api/posts     | Returns an array of all the post objects contained in the database.                                                                                                         |
 | [x] GET    | /api/posts/:id | Returns the post object with the specified id.                                                                                                                              |
 | [xxx] GET    | /api/posts/:id/comments | Returns an array of all the comment objects associated with the post with the specified id. |
@@ -84,7 +84,7 @@ Configure the API to handle to the following routes:
 
 #### Endpoint Specificationsx
 
-[] When the client makes a `POST` request to `/api/posts`:
+[x] When the client makes a `POST` request to `/api/posts`:
 
 - If the request body is missing the `title` or `contents` property:
 
@@ -146,7 +146,7 @@ Configure the API to handle to the following routes:
   - respond with HTTP status code `500`.
   - return the following JSON object: `{ error: "The post information could not be retrieved." }`.
 
-[] When the client makes a `GET` request to `/api/posts/:id/comments`:
+[x] When the client makes a `GET` request to `/api/posts/:id/comments`:
 
 - If the _post_ with the specified `id` is not found:
 
@@ -158,7 +158,7 @@ Configure the API to handle to the following routes:
   - respond with HTTP status code `500`.
   - return the following JSON object: `{ error: "The comments information could not be retrieved." }`.
 
-[] When the client makes a `DELETE` request to `/api/posts/:id`:
+[x] When the client makes a `DELETE` request to `/api/posts/:id`:
 
 - If the _post_ with the specified `id` is not found:
 
