@@ -76,8 +76,44 @@ server.delete('/api/posts/:id', (req, res) => {
     })
 })
 
+server.post('/api/posts', (req, res) => {
+    const {title, contents} = req.body;
+    const postInfo = req.body;
+    if (!title || !contents ) {
+        res.status(400).json({
+            errorMessage: "Please provide title and contents for the post."
+        })
+    } else {
+        db.insert(postInfo)
+        .then(posts => {
+            res.status(201).json(posts)
+        })
+        .catch(err => {
+            res.status(500).json({
+                error: "There was an error while saving the post to the database"
+        })
+    })}
+});
 
-
+server.post('/api/users', (req, res) => {
+    const {name, bio} = req.body;
+    const userInfo = req.body;
+    if (!name || !bio ) {
+        res.status(400).json({ 
+            errorMessage: "Please provide name and bio for the user." 
+        })
+    }
+    else {
+    db.insert(userInfo)
+    .then(users => {
+            res.status(201).json(users)
+        })
+    .catch(err => {
+        res.status(500).json({
+             error: "There was an error while saving the user to the database" 
+        })
+    })}
+})
 
 
 
